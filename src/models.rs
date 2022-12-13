@@ -26,9 +26,9 @@ impl Bot {
         let mut bots: Vec<Bot> = toml::from_str(&input_string).expect("Could not parse toml file");
 
         // See if a project with the same title exists
-        if let Some(mut project) = bots.iter_mut().find(|x| x.title == self.title) {
+        if let Some(project) = bots.iter_mut().find(|x| x.title == self.title) {
             // If yes: update project in the toml file
-            
+            *project = self.clone();
         } else {
             // If not: append project to the toml file
             bots.push(self.clone());
