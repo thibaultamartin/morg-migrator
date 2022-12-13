@@ -4,6 +4,7 @@ use anyhow::{bail, Context};
 use indexmap::IndexMap;
 use itertools::Itertools;
 use models::Bot;
+use serde::{Deserialize, Serialize};
 use std::{
     env,
     fs::File,
@@ -13,6 +14,7 @@ use std::{
     str::FromStr,
 };
 
+#[derive(Clone, Deserialize, Serialize)]
 pub enum Maturity {
     Obsolete,
     Alpha,
@@ -74,6 +76,8 @@ fn main() -> anyhow::Result<()> {
     );
 
     let input_path = Path::new(args.get(1).unwrap());
+    let toml_path = Path::new(args.get(2).unwrap());
+
     let (yaml_frontmatter, markdown) = read_file_contents(input_path)?;
     let frontmatter_value: IndexMap<String, toml::Value> = serde_yaml::from_str(&yaml_frontmatter)
         .with_context(|| format!("reading frontmatter of `{}`", input_path.display()))?;
@@ -128,6 +132,8 @@ fn main() -> anyhow::Result<()> {
                 license: license.to_string(),
                 repo: repo.to_string(),
             };
+
+            bot.update_toml(toml_path).expect("Failed to update toml file");
         }
         ProjectType::Bridge => {}
         ProjectType::Client => {}
