@@ -133,7 +133,7 @@ fn main() -> anyhow::Result<()> {
                 repo: repo.to_string(),
             };
 
-            bot.update_toml(toml_path).expect("Failed to update toml file");
+            bot.update_toml(toml_path);
         }
         ProjectType::Bridge => {}
         ProjectType::Client => {}

@@ -1,4 +1,8 @@
-use std::{fs::File, io::Read, path::Path};
+use std::{
+    fs::{self, File},
+    io::Read,
+    path::Path,
+};
 
 use serde::{Deserialize, Serialize};
 
@@ -16,7 +20,7 @@ pub struct Bot {
 }
 
 impl Bot {
-    pub fn update_toml(&self, path: &Path) -> Result<(), ()> {
+    pub fn update_toml(&self, path: &Path) {
         // Open & parse toml file
         let mut input_string = String::new();
         File::open(path)
@@ -33,9 +37,9 @@ impl Bot {
             // If not: append project to the toml file
             bots.push(self.clone());
         }
-        
 
-        Ok(())
+        let bots_str = toml::to_string(&bots).expect("Couldn't serialise bots to a string");
+        fs::write(path, bots_str).expect("Failed to write toml file");
     }
 }
 
