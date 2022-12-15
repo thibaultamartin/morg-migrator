@@ -3,7 +3,7 @@ mod models;
 use anyhow::{bail, Context};
 use indexmap::IndexMap;
 use itertools::Itertools;
-use models::Bot;
+use models::{Bot, Sdk};
 use serde::{Deserialize, Serialize};
 use std::{
     env,
@@ -137,7 +137,45 @@ fn main() -> anyhow::Result<()> {
         }
         ProjectType::Bridge => {}
         ProjectType::Client => {}
-        ProjectType::Sdk => {}
+        ProjectType::Sdk => {
+            let title = frontmatter_value
+                .get("title")
+                .expect("Project doesn't contain title")
+                .as_str()
+                .expect("Project title is not a string");
+            let maintainer = frontmatter_value
+                .get("author")
+                .expect("Project doesn't contain title")
+                .as_str()
+                .expect("Project title is not a string");
+            let language = frontmatter_value
+                .get("language")
+                .expect("Project doesn't contain language")
+                .as_str()
+                .expect("Project language is not a string");
+            let license = frontmatter_value
+                .get("license")
+                .expect("Project doesn't contain a licence")
+                .as_str()
+                .expect("Project licence is not a string");
+            let repo = frontmatter_value
+                .get("repo")
+                .expect("Project doesn't contain repo information")
+                .as_str()
+                .expect("Project repo is not a string");
+            
+            let mut sdk = Sdk {
+                title: title.to_string(),
+                maintainer: maintainer.to_string(),
+                language: language.to_string(),
+                license: license.to_string(),
+                repository: repo.to_string(),
+                purpose: Vec::<String>::new(),
+                featured_in: Vec::<String>::new(),
+            };
+
+            sdk.update_toml(toml_path);
+        }
     }
 
     Ok(())
