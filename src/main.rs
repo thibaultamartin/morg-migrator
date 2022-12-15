@@ -125,9 +125,9 @@ fn main() -> anyhow::Result<()> {
 
             let bot = Bot {
                 title: title.to_string(),
-                description: description.to_string(),
-                author: author.to_string(),
-                maturity: maturity,
+                summary: description.to_string(),
+                maintainer: author.to_string(),
+                maturity,
                 language: language.to_string(),
                 license: license.to_string(),
                 repo: repo.to_string(),

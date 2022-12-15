@@ -1,7 +1,8 @@
 use std::{
+    collections::BTreeMap,
     fs::{self, File},
     io::Read,
-    path::Path, collections::BTreeMap,
+    path::Path,
 };
 
 use serde::{Deserialize, Serialize};
@@ -12,8 +13,8 @@ use crate::Maturity;
 pub struct Bot {
     #[serde(skip_serializing)]
     pub title: String,
-    pub description: String,
-    pub author: String,
+    pub summary: String,
+    pub maintainer: String,
     pub maturity: Maturity,
     pub language: String,
     pub license: String,
@@ -28,7 +29,8 @@ impl Bot {
             .expect("Could not open target toml file")
             .read_to_string(&mut input_string)
             .expect("Failed to read toml file");
-         let mut bots: BTreeMap<String, Bot> = toml::from_str(&input_string).expect("Could not parse toml file");
+        let mut bots: BTreeMap<String, Bot> =
+            toml::from_str(&input_string).expect("Could not parse toml file");
 
         // // See if a project with the same title exists
         if let Some(project) = bots.get_mut(&self.title) {
@@ -44,8 +46,17 @@ impl Bot {
     }
 }
 
-pub struct Bridge {}
+pub struct Bridge {
+    pub title: String,
+    pub summary: String,
+    pub maintainer: String,
+    pub maturity: Maturity,
+    pub language: String,
+    pub license: String,
+    pub repo: String,
+    pub platform: Vec<String>,
+}
 
-pub struct Client {}
+// Not doing client on purpose: data is outdated and needs to be audited
 
 pub struct Sdk {}
